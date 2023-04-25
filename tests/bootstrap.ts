@@ -5,7 +5,7 @@
  * file.
  */
 
-import type { Config } from '@japa/runner'
+import { Config, Test } from '@japa/runner'
 import TestUtils from '@ioc:Adonis/Core/TestUtils'
 import { assert, runFailedTests, specReporter, apiClient } from '@japa/preset-adonis'
 
@@ -47,7 +47,11 @@ export const reporters: Required<Config>['reporters'] = [specReporter()]
 |
 */
 export const runnerHooks: Pick<Required<Config>, 'setup' | 'teardown'> = {
-  setup: [() => TestUtils.ace().loadCommands()],
+  setup: [
+    () => TestUtils.ace().loadCommands(),
+    () => TestUtils.db().migrate(),
+    () => TestUtils.db().seed()
+  ],
   teardown: [],
 }
 
