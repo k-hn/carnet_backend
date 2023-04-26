@@ -1,5 +1,6 @@
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
+import EmailVerificationToken from 'App/Models/EmailVerificationToken'
 import UserFactory from 'Database/factories/UserFactory'
 
 test.group('Users signup', (group) => {
@@ -167,5 +168,23 @@ test.group('Users signup', (group) => {
       .json(userPayload)
 
     response.assertStatus(422);
+  })
+
+  test("email verification token saved when signup is successful", async ({ assert, client }) => {
+    const userPayload = {
+      username: "someUUusername",
+      email: "sdusername@mail.com",
+      password: "passwordpassword",
+      password_confirmation: "passwordpassword"
+    }
+
+    const response = await client
+      .post("/api/v1/signup")
+      .json(userPayload)
+
+    const emailToken = await EmailVerificationToken.findByOrFail("userId", response.body().id)
+
+    response.assertStatus(201);
+    assert.isTrue(response.body().id === emailToken.userId)
   })
 })
