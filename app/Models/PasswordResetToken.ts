@@ -7,6 +7,9 @@ export default class PasswordResetToken extends BaseModel {
   public id: number
 
   @column()
+  public userId: number
+
+  @column()
   public resetToken: string
 
   @column.dateTime({ autoCreate: true })

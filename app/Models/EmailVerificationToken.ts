@@ -7,6 +7,9 @@ export default class EmailVerificationToken extends BaseModel {
   public id: number
 
   @column()
+  public userId: number
+
+  @column()
   public verificationToken: string
 
   @column()

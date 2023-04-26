@@ -32,7 +32,7 @@ export default class SignUpValidator {
     ]),
     email: schema.string([
       rules.trim(),
-      rules.unique({ table: "users", column: "email" }),
+      rules.unique({ table: "users", column: "email", caseInsensitive: true }),
       rules.email(),
       rules.normalizeEmail({
         allLowercase: true
