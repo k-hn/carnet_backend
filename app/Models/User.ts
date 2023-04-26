@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import EmailVerificationToken from './EmailVerificationToken'
+import PasswordResetToken from './PasswordResetToken'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -27,4 +29,10 @@ export default class User extends BaseModel {
       user.password = await Hash.make(user.password)
     }
   }
+
+  @hasOne(() => EmailVerificationToken)
+  public emailVerificationToken: HasOne<typeof EmailVerificationToken>
+
+  @hasOne(() => PasswordResetToken)
+  public passwordResetToken: HasOne<typeof PasswordResetToken>
 }
