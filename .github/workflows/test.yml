@@ -27,8 +27,8 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: carnet_test
         ports:
           - 5432:5432
@@ -52,10 +52,12 @@ jobs:
       env:
         PORT: 3333
         HOST: 0.0.0.0
+        NODE_ENV: test
         APP_KEY: YaCHQF33_dCx2n7h1qEgv7hH2_BEiK52
         DRIVE_DISK: local
         DB_CONNECTION: pg
         PG_HOST: localhost
         PG_PORT: 5432
         PG_USER: postgres
+        PG_PASSWORD: postgres
         PG_DB_NAME: carnet_test
