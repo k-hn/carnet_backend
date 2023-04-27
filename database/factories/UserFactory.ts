@@ -1,5 +1,6 @@
 import User from 'App/Models/User'
 import Factory from '@ioc:Adonis/Lucid/Factory'
+import NoteFactory from './NoteFactory'
 
 export default Factory.define(User, ({ faker }) => {
   return {
@@ -7,4 +8,6 @@ export default Factory.define(User, ({ faker }) => {
     email: faker.internet.email(),
     password: faker.internet.password()
   }
-}).build()
+})
+  .relation("notes", () => NoteFactory)
+  .build()
