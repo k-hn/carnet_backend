@@ -24,6 +24,10 @@ Route.group(() => {
   Route.group(() => {
 
     // Sign ups
-    Route.post("/signup", "SignUpController.index")
-  }).prefix("v1")
-}).prefix("/api")
+    Route.post("/signup", "SignUpController.index").as("signup")
+    // Login
+    Route.post("/login", "AuthController.login").as("login")
+    // Logout
+    Route.get("/logout", "AuthController.logout").as("logout")
+  }).prefix("v1").as("v1")
+}).prefix("/api").as("api")
