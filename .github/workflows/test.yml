@@ -55,6 +55,7 @@ jobs:
         APP_KEY: YaCHQF33_dCx2n7h1qEgv7hH2_BEiK52
         DRIVE_DISK: local
         DB_CONNECTION: pg
+        PG_HOST: localhost
         PG_PORT: 5432
         PG_USER: postgres
         PG_DB_NAME: carnet_test
