@@ -5,7 +5,7 @@
  * file.
  */
 
-import { Config, Test } from '@japa/runner'
+import { Config } from '@japa/runner'
 import TestUtils from '@ioc:Adonis/Core/TestUtils'
 import { assert, runFailedTests, specReporter, apiClient } from '@japa/preset-adonis'
 

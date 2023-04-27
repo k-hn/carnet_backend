@@ -1,7 +1,6 @@
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import Route from '@ioc:Adonis/Core/Route'
-import NoteFactory from 'Database/factories/NoteFactory'
 import UserFactory from 'Database/factories/UserFactory'
 
 test.group('Notes notes', (group) => {
