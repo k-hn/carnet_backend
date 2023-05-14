@@ -18,26 +18,28 @@
 |
 */
 
-import Route from '@ioc:Adonis/Core/Route'
+import Route from "@ioc:Adonis/Core/Route";
 
 Route.group(() => {
   Route.group(() => {
-
     // Sign ups
-    Route.post("/signup", "SignUpController.index").as("signup")
+    Route.post("/signup", "SignUpController.index").as("signup");
     // Login
-    Route.post("/login", "AuthController.login").as("login")
+    Route.post("/login", "AuthController.login").as("login");
     // Logout
-    Route.get("/logout", "AuthController.logout").as("logout")
+    Route.get("/logout", "AuthController.logout").as("logout");
 
     // Notes CRUD endpoints
     Route.group(() => {
-      Route.post("/notes", "NotesController.create").as("notes_create")
-      Route.get("/notes", "NotesController.index").as("notes_index")
-      Route.get("/notes/:id", "NotesController.show").as("notes_show")
-      Route.put("/notes/:id", "NotesController.update").as("notes_update")
-      Route.delete("/notes/:id", "NotesController.destroy").as("notes_destroy")
-    }).middleware("auth")
-
-  }).prefix("v1").as("v1")
-}).prefix("/api").as("api")
+      Route.post("/notes", "NotesController.create").as("notes_create");
+      Route.get("/notes", "NotesController.index").as("notes_index");
+      Route.get("/notes/:id", "NotesController.show").as("notes_show");
+      Route.put("/notes/:id", "NotesController.update").as("notes_update");
+      Route.delete("/notes/:id", "NotesController.destroy").as("notes_destroy");
+    }).middleware("auth");
+  })
+    .prefix("v1")
+    .as("v1");
+})
+  .prefix("/api")
+  .as("api");

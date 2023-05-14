@@ -1,8 +1,8 @@
-import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema, rules, CustomMessages } from "@ioc:Adonis/Core/Validator";
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
 export default class SignUpValidator {
-  constructor(protected ctx: HttpContextContract) { }
+  constructor(protected ctx: HttpContextContract) {}
 
   /*
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
@@ -28,21 +28,18 @@ export default class SignUpValidator {
       rules.trim(),
       rules.minLength(2),
       rules.maxLength(100),
-      rules.unique({ table: "users", column: "username", caseInsensitive: true })
+      rules.unique({ table: "users", column: "username", caseInsensitive: true }),
     ]),
     email: schema.string([
       rules.trim(),
       rules.unique({ table: "users", column: "email", caseInsensitive: true }),
       rules.email(),
       rules.normalizeEmail({
-        allLowercase: true
-      })
+        allLowercase: true,
+      }),
     ]),
-    password: schema.string([
-      rules.confirmed(),
-      rules.minLength(10)
-    ])
-  })
+    password: schema.string([rules.confirmed(), rules.minLength(10)]),
+  });
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -55,5 +52,5 @@ export default class SignUpValidator {
    * }
    *
    */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {};
 }

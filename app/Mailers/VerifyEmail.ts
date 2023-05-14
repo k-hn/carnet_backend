@@ -1,10 +1,10 @@
-import { BaseMailer, MessageContract } from '@ioc:Adonis/Addons/Mail'
-import User from 'App/Models/User'
-import Env from '@ioc:Adonis/Core/Env'
+import { BaseMailer, MessageContract } from "@ioc:Adonis/Addons/Mail";
+import User from "App/Models/User";
+import Env from "@ioc:Adonis/Core/Env";
 
 export default class VerifyEmail extends BaseMailer {
   constructor(private user: User) {
-    super()
+    super();
   }
   /**
    * WANT TO USE A DIFFERENT MAILER?
@@ -27,13 +27,13 @@ export default class VerifyEmail extends BaseMailer {
     const frontendUrl = Env.get("FE_URL");
     const userEmailDetails = {
       username: this.user.username,
-      url: `${frontendUrl}/verify/${this.user.emailVerificationToken.verificationToken}`
-    }
+      url: `${frontendUrl}/verify/${this.user.emailVerificationToken.verificationToken}`,
+    };
 
     message
       .from("no-reply@carnet.com", "Carnet")
       .to(this.user.email)
       .subject("Welcome Onboard the Carnet Train!")
-      .htmlView("emails/welcome", { userDetails: userEmailDetails })
+      .htmlView("emails/welcome", { userDetails: userEmailDetails });
   }
 }

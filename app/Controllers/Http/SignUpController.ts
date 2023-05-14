@@ -1,29 +1,29 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database';
-import User from 'App/Models/User'
-import SignUpValidator from 'App/Validators/SignUpValidator'
-import { v4 as uuidv4 } from 'uuid';
-import VerifyEmail from 'App/Mailers/VerifyEmail';
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import Database from "@ioc:Adonis/Lucid/Database";
+import User from "App/Models/User";
+import SignUpValidator from "App/Validators/SignUpValidator";
+import { v4 as uuidv4 } from "uuid";
+import VerifyEmail from "App/Mailers/VerifyEmail";
 
 export default class SignUpController {
-    public async index({ request, response }: HttpContextContract) {
-        const payload = await request.validate(SignUpValidator)
+  public async index({ request, response }: HttpContextContract) {
+    const payload = await request.validate(SignUpValidator);
 
-        // Create user creation and email verification transaction
-        const user = await Database.transaction(async (trx) => {
-            // Create user record
-            const user = await User.create(payload, { client: trx })
+    // Create user creation and email verification transaction
+    const user = await Database.transaction(async (trx) => {
+      // Create user record
+      const user = await User.create(payload, { client: trx });
 
-            // Create email verification record
-            await user.related("emailVerificationToken").create({
-                verificationToken: uuidv4(),
-            })
+      // Create email verification record
+      await user.related("emailVerificationToken").create({
+        verificationToken: uuidv4(),
+      });
 
-            return user;
-        })
+      return user;
+    });
 
-        await new VerifyEmail(user).sendLater();
+    await new VerifyEmail(user).sendLater();
 
-        return response.created(user)
-    }
+    return response.created(user);
+  }
 }

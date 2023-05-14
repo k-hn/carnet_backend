@@ -29,7 +29,7 @@
   ],
   "prettier": {
     "trailingComma": "es5",
-    "semi": false,
+    "semi": true,
     "singleQuote": false,
     "useTabs": false,
     "quoteProps": "consistent",
