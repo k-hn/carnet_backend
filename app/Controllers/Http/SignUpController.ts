@@ -3,6 +3,7 @@ import Database from '@ioc:Adonis/Lucid/Database';
 import User from 'App/Models/User'
 import SignUpValidator from 'App/Validators/SignUpValidator'
 import { v4 as uuidv4 } from 'uuid';
+import VerifyEmail from 'App/Mailers/VerifyEmail';
 
 export default class SignUpController {
     public async index({ request, response }: HttpContextContract) {
@@ -20,6 +21,8 @@ export default class SignUpController {
 
             return user;
         })
+
+        await new VerifyEmail(user).sendLater();
 
         return response.created(user)
     }

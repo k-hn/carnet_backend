@@ -1,3 +1,4 @@
+import Mail from '@ioc:Adonis/Addons/Mail'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import EmailVerificationToken from 'App/Models/EmailVerificationToken'
@@ -22,6 +23,27 @@ test.group('Users signup', (group) => {
       .json(userPayload)
 
     response.assertStatus(201);
+  })
+
+  test("email verification email sent on successful signup", async ({ assert, client }) => {
+    const mailer = Mail.fake()
+
+    const userPayload = {
+      username: "someUUusername",
+      email: "sdusername@mail.com",
+      password: "passwordpassword",
+      password_confirmation: "passwordpassword"
+    }
+
+    await client
+      .post("/api/v1/signup")
+      .json(userPayload)
+
+    assert.isTrue(mailer.exists((mail) => {
+      return mail.subject == "Welcome Onboard the Carnet Train!"
+    }))
+
+    Mail.restore()
   })
 
   test("signup fails when password is less than 10 characters", async ({ client }) => {
