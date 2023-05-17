@@ -233,4 +233,51 @@ test.group("SignUp: Email verification", (group) => {
       verified: true
     })
   })
+
+  test("verification mail re-sent when email not verified", async ({ assert, client }) => {
+    const mailer = Mail.fake();
+
+    const user = await UserFactory.with("emailVerificationToken", 1).create();
+
+    const response = await client
+      .get(`/api/v1/resend-verification-email/${user.email}`)
+
+    response.assertStatus(200);
+    response.assertBody({
+      message: "verification email resent"
+    })
+
+    assert.isTrue(
+      mailer.exists((mail) => {
+        return mail.subject == "Welcome Onboard the Carnet Train!";
+      })
+    );
+
+    Mail.restore();
+  })
+
+  test("verification mail not re-sent when email is already verified", async ({ assert, client }) => {
+    const mailer = Mail.fake();
+
+    const user = await UserFactory
+      .with("emailVerificationToken", 1, (token) => token.apply("verified"))
+      .create();
+
+    const response = await client
+      .get(`/api/v1/resend-verification-email/${user.email}`)
+
+    response.assertStatus(200);
+    console.log(response.body)
+    response.assertBody({
+      message: "email address already verified"
+    })
+
+    assert.isFalse(
+      mailer.exists((mail) => {
+        return mail.subject == "Welcome Onboard the Carnet Train!";
+      })
+    );
+
+    Mail.restore();
+  })
 })

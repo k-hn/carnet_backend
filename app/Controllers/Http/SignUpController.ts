@@ -45,4 +45,23 @@ export default class SignUpController {
 
     return response.ok({ verified: true });
   }
+
+  public async resendVerficationEmail({ request, response }: HttpContextContract) {
+    const email = request.param("email");
+
+    const user = await User.findByOrFail("email", email);
+    await user.load("emailVerificationToken");
+
+    if (user.emailVerificationToken.isVerified) {
+      return response.ok({
+        message: "email address already verified"
+      })
+    } else {
+      await new VerifyEmail(user).sendLater();
+
+      return response.ok({
+        message: "verification email resent"
+      });
+    }
+  }
 }
