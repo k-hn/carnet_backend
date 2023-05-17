@@ -13,7 +13,7 @@ export default class EmailVerificationToken extends BaseModel {
   public verificationToken: string;
 
   @column()
-  public isVerfied: boolean;
+  public isVerified: boolean;
 
   @column()
   public verifiedAt: DateTime | null;

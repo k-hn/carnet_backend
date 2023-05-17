@@ -3,6 +3,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 import { test } from "@japa/runner";
 import EmailVerificationToken from "App/Models/EmailVerificationToken";
 import UserFactory from "Database/factories/UserFactory";
+import { v4 as uuidv4 } from "uuid";
 
 test.group("Users signup", (group) => {
   group.each.setup(async () => {
@@ -187,3 +188,49 @@ test.group("Users signup", (group) => {
     assert.isTrue(response.body().id === emailToken.userId);
   });
 });
+
+test.group("SignUp: Email verification", (group) => {
+  group.each.setup(async () => {
+    await Database.beginGlobalTransaction();
+    return () => Database.rollbackGlobalTransaction();
+  });
+
+  test("verification using existing tokens succeeds", async ({ client }) => {
+    const user = await UserFactory.with("emailVerificationToken").create();
+    const verificationToken = user.emailVerificationToken.verificationToken;
+
+    const response = await client
+      .get(`/api/v1/verify/${verificationToken}`)
+
+    response.assertStatus(200)
+    response.assertBody({
+      verified: true
+    })
+  })
+
+  test("verification using non-existent token fails", async ({ client }) => {
+    const badUUID = uuidv4();
+    await UserFactory.with("emailVerificationToken").createMany(5);
+
+    const response = await client
+      .get(`/api/v1/verify/${badUUID}`);
+
+    response.assertStatus(404);
+  })
+
+  test("verifying already verified token succeeds", async ({ client }) => {
+    const user = await UserFactory.with(
+      "emailVerificationToken",
+      1,
+      (token) => token.apply("verified")
+    ).create();
+
+    const response = await client
+      .get(`api/v1/verify/${user.emailVerificationToken.verificationToken}`)
+
+    response.assertStatus(200)
+    response.assertBody({
+      verified: true
+    })
+  })
+})

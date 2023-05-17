@@ -1,6 +1,7 @@
 import User from "App/Models/User";
 import Factory from "@ioc:Adonis/Lucid/Factory";
 import NoteFactory from "./NoteFactory";
+import EmailVerificationTokenFactory from "./EmailVerificationTokenFactory";
 
 export default Factory.define(User, ({ faker }) => {
   return {
@@ -10,4 +11,5 @@ export default Factory.define(User, ({ faker }) => {
   };
 })
   .relation("notes", () => NoteFactory)
+  .relation("emailVerificationToken", () => EmailVerificationTokenFactory)
   .build();

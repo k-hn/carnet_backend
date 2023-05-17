@@ -4,6 +4,8 @@ import User from "App/Models/User";
 import SignUpValidator from "App/Validators/SignUpValidator";
 import { v4 as uuidv4 } from "uuid";
 import VerifyEmail from "App/Mailers/VerifyEmail";
+import EmailVerificationToken from "App/Models/EmailVerificationToken";
+import { DateTime } from "luxon";
 
 export default class SignUpController {
   public async index({ request, response }: HttpContextContract) {
@@ -25,5 +27,22 @@ export default class SignUpController {
     await new VerifyEmail(user).sendLater();
 
     return response.created(user);
+  }
+
+  public async verifyEmail({ request, response }: HttpContextContract) {
+    const token = request.param("token");
+
+    const verificationToken = await EmailVerificationToken.findByOrFail("verificationToken", token);
+
+    // If already verified, return response
+    if (verificationToken.isVerified && verificationToken.verifiedAt !== null) {
+      return response.ok({ verified: true });
+    }
+    await verificationToken.merge({
+      isVerified: true,
+      verifiedAt: DateTime.now()
+    }).save();
+
+    return response.ok({ verified: true });
   }
 }

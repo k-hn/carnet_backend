@@ -24,6 +24,7 @@ Route.group(() => {
   Route.group(() => {
     // Sign ups
     Route.post("/signup", "SignUpController.index").as("signup");
+    Route.get("/verify/:token", "SignUpController.verifyEmail").as("verify_email");
     // Login
     Route.post("/login", "AuthController.login").as("login");
     // Logout

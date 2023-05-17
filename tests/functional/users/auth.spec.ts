@@ -3,7 +3,7 @@ import { test } from "@japa/runner";
 import UserFactory from "Database/factories/UserFactory";
 import Route from "@ioc:Adonis/Core/Route";
 
-test.group("Users login", (group) => {
+test.group("Auth: Users login", (group) => {
   group.each.setup(async () => {
     await Database.beginGlobalTransaction();
     return () => Database.rollbackGlobalTransaction();
