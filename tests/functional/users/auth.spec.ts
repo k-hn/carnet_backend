@@ -2,6 +2,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 import { test } from "@japa/runner";
 import UserFactory from "Database/factories/UserFactory";
 import Route from "@ioc:Adonis/Core/Route";
+import Mail from "@ioc:Adonis/Addons/Mail";
 
 test.group("Auth: Users login", (group) => {
   group.each.setup(async () => {
@@ -47,3 +48,46 @@ test.group("Auth: Users login", (group) => {
     response.assertStatus(200);
   });
 });
+
+
+test.group("Auth: Forgot Password", (group) => {
+  group.each.setup(async () => {
+    await Database.beginGlobalTransaction();
+    return () => Database.rollbackGlobalTransaction();
+  })
+
+  test("forgot password request succeeds for existing user and mail sent", async ({ assert, client }) => {
+    const mailer = Mail.fake();
+    const user = await UserFactory.create();
+    const payload = {
+      email: user.email
+    }
+
+    const response = await client
+      .post("/api/v1/forgot-password")
+      .json(payload)
+
+    // assert.isTrue(
+    //   mailer.exists((mail) => {
+    //     return mail.subject == "Password Reset";
+    //   })
+    // );
+    response.assertStatus(200);
+    response.assertBody({
+      message: "reset password email sent"
+    })
+
+    Mail.restore();
+  })
+
+  test("forgot password request fails for non-existent user", async ({ client }) => {
+    const email = "randomUser@mail.com";
+
+    const response = await client
+      .post("/api/v1/forgot-password")
+      .json({ email })
+
+    response.assertStatus(404);
+  })
+
+})

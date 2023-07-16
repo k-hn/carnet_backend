@@ -28,6 +28,7 @@ Route.group(() => {
     Route.get("/resend-verification-email/:email", "SignUpController.resendVerficationEmail").as("resend_verification_email");
     // Login
     Route.post("/login", "AuthController.login").as("login");
+    Route.post("/forgot-password", "AuthController.forgotPassword").as("forgotPassword");
     // Logout
     Route.get("/logout", "AuthController.logout").as("logout");
 
