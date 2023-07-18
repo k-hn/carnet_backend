@@ -10,22 +10,22 @@ test.group("Auth: Users login", (group) => {
     return () => Database.rollbackGlobalTransaction();
   });
 
-  // test("login succeeds for valid user details", async ({ client }) => {
-  //   const user = await UserFactory
-  //     .merge({ password: "passwordpassword" })
-  //     .create();
+  test("login succeeds for valid user details", async ({ client }) => {
+    const user = await UserFactory
+      .merge({ password: "passwordpassword" })
+      .create();
 
-  //   const loginPayload = {
-  //     email: user.email,
-  //     password: "passwordpassword"
-  //   }
+    const loginPayload = {
+      email: user.email,
+      password: "passwordpassword"
+    }
 
-  //   const response = await client
-  //     .post(Route.makeUrl("api.v1.login"))
-  //     .json(loginPayload)
+    const response = await client
+      .post(Route.makeUrl("api.v1.login"))
+      .json(loginPayload)
 
-  //   response.assertStatus(200)
-  // })
+    response.assertStatus(200)
+  })
 
   test("login fails for invalid user details", async ({ client }) => {
     const user = await UserFactory.create();
@@ -57,8 +57,8 @@ test.group("Auth: Forgot Password", (group) => {
   })
 
   test("forgot password request succeeds for existing user and mail sent", async ({ assert, client }) => {
-    const mailer = Mail.fake();
     const user = await UserFactory.create();
+    const mailer = Mail.fake();
     const payload = {
       email: user.email
     }
@@ -67,15 +67,16 @@ test.group("Auth: Forgot Password", (group) => {
       .post("/api/v1/forgot-password")
       .json(payload)
 
-    // assert.isTrue(
-    //   mailer.exists((mail) => {
-    //     return mail.subject == "Password Reset";
-    //   })
-    // );
     response.assertStatus(200);
     response.assertBody({
       message: "reset password email sent"
     })
+
+    assert.isTrue(
+      mailer.exists((mail) => {
+        return mail.subject == "Password Reset";
+      })
+    );
 
     Mail.restore();
   })
@@ -88,6 +89,41 @@ test.group("Auth: Forgot Password", (group) => {
       .json({ email })
 
     response.assertStatus(404);
+  })
+
+  test("reset password succeeds for correct input", async ({ client }) => {
+    const user = await UserFactory.with("passwordResetToken").create();
+    const token = await user.related("passwordResetToken").query().firstOrFail();
+
+    const payload = {
+      password: "newPassword",
+      password_confirmation: "newPassword"
+    }
+
+    const response = await client
+      .post(`/api/v1/reset-password/${token.resetToken}`)
+      .json(payload)
+
+    response.assertStatus(204)
+  })
+
+  test("reset password fails for expired token", async ({ client }) => {
+    const user = await UserFactory
+      .with("passwordResetToken", 1,
+        (token) => token.apply("expired")
+      ).create();
+    const token = await user.related("passwordResetToken").query().firstOrFail();
+
+    const payload = {
+      password: "newPassword",
+      password_confirmation: "newPassword"
+    }
+
+    const response = await client
+      .post(`/api/v1/reset-password/${token.resetToken}`)
+      .json(payload)
+
+    response.assertStatus(400)
   })
 
 })

@@ -29,6 +29,7 @@ Route.group(() => {
     // Login
     Route.post("/login", "AuthController.login").as("login");
     Route.post("/forgot-password", "AuthController.forgotPassword").as("forgotPassword");
+    Route.post("/reset-password/:token", "AuthController.resetPassword").as("resetPassword");
     // Logout
     Route.get("/logout", "AuthController.logout").as("logout");
 

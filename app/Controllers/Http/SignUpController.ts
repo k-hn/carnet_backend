@@ -26,7 +26,7 @@ export default class SignUpController {
 
     await new VerifyEmail(user).sendLater();
 
-    return response.created(user);
+    return response.created(user.serializeAttributes());
   }
 
   public async verifyEmail({ request, response }: HttpContextContract) {

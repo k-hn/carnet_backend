@@ -267,7 +267,7 @@ test.group("SignUp: Email verification", (group) => {
       .get(`/api/v1/resend-verification-email/${user.email}`)
 
     response.assertStatus(200);
-    console.log(response.body)
+
     response.assertBody({
       message: "email address already verified"
     })

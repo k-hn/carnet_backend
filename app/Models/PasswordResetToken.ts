@@ -12,6 +12,9 @@ export default class PasswordResetToken extends BaseModel {
   @column()
   public resetToken: string;
 
+  @column.dateTime()
+  public expiresAt: DateTime;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 

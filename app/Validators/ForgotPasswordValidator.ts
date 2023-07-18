@@ -27,9 +27,6 @@ export default class ForgotPasswordValidator {
     email: schema.string([
       rules.trim(),
       rules.email(),
-      rules.normalizeEmail({
-        allLowercase: true,
-      }),
     ]),
   })
 
