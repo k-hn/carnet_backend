@@ -20,7 +20,6 @@ export default class AuthController {
   }
 
   public async logout({ auth, response }: HttpContextContract) {
-    // todo
     await auth.use("api").revoke();
 
     return response.ok({ revoked: true });
@@ -64,5 +63,3 @@ export default class AuthController {
     return response.noContent()
   }
 }
-
-// TODO: reset password

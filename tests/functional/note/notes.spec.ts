@@ -189,7 +189,7 @@ test.group("Notes CRUD:logged-in users", (group) => {
   });
 });
 
-// TODO: test pagination
+
 test.group("Notes CRUD: Pagination", (group) => {
   group.each.setup(async () => {
     await Database.beginGlobalTransaction();
