@@ -8,6 +8,7 @@ import EmailVerificationToken from "App/Models/EmailVerificationToken";
 import { DateTime } from "luxon";
 
 export default class SignUpController {
+
   public async index({ request, response }: HttpContextContract) {
     const payload = await request.validate(SignUpValidator);
 

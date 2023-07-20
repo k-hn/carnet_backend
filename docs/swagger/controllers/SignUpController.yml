@@ -1,0 +1,37 @@
+/api/v1/signup:
+  post:
+    summary: Creates a new user account
+    description: Users send a payload which is then used to create an account
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: "fancyUsername"
+              email:
+                type: string
+                format: email
+                example: "fancy@mail.com"
+              password:
+                type: string
+                example: "somePassword"
+              password_confirmation:
+                type: string
+                example: "somePassword"
+    responses:
+      "201":
+        description: User account created
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      "422":
+        description: Validation error. User account creation failed.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidationErrors"

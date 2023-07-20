@@ -19,6 +19,7 @@
 */
 
 import Route from "@ioc:Adonis/Core/Route";
+import Env from '@ioc:Adonis/Core/Env';
 
 Route.group(() => {
   Route.group(() => {
@@ -41,6 +42,12 @@ Route.group(() => {
       Route.put("/notes/:id", "NotesController.update").as("notes_update");
       Route.delete("/notes/:id", "NotesController.destroy").as("notes_destroy");
     }).middleware("auth");
+
+    // Swagger
+    Route.get("/docs", async ({ view }) => {
+      const specUrl = `/swagger.json`
+      return view.render("swagger", { specUrl })
+    }).as("swagger");
   })
     .prefix("v1")
     .as("v1");

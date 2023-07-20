@@ -1,0 +1,25 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          required: true
+          type: number
+          example: 1
+        username:
+          required: true
+          type: string
+          example: "fancyUsername"
+        email:
+          required: true
+          type: string
+          example: "fancy@mail.com"
+        created_at:
+          required: true
+          type: string
+          format: date-time
+        updated_at:
+          required: true
+          type: string
+          format: date-time

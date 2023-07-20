@@ -1,0 +1,26 @@
+components:
+  schemas:
+    ValidationErrorUnit:
+      type: object
+      properties:
+        rule:
+          type: string
+          example: "required"
+        field:
+          type: string
+          example: "username"
+        message:
+          type: string
+          example: "required validation failed"
+        args:
+          required: false
+          type: object
+          example: {"minLength": 10}
+    
+    ValidationErrors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: 
+            $ref: "#/components/schemas/ValidationErrorUnit"
